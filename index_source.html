@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absolutes — Dynamic Flavor Extracts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600;9..144,700&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#D8A657;
+    --gold-deep:#C08F3E;
+    --crimson:#A52A2A;
+    --sage:#7D956D;
+    --cream:#F6F0E4;
+    --paper:#FBF7EF;
+    --espresso:#2A1C13;
+    --espresso-soft:#3D2A1C;
+    --ink:#2A1C13;
+    --line:rgba(42,28,19,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Sora', sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{ font-family:'Fraunces', serif; }
+  a{color:inherit; text-decoration:none;}
+  img,svg{display:block; max-width:100%;}
+  .wrap{ max-width:1240px; margin:0 auto; padding:0 40px; }
+  @media(max-width:640px){ .wrap{ padding:0 22px; } }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(251,247,239,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:78px;
+  }
+  .logo{ display:flex; align-items:center; gap:12px; }
+  .logo-mark{ width:34px; height:34px; }
+  .logo-text{ font-family:'Fraunces', serif; font-size:1.28rem; font-weight:600; letter-spacing:0.02em; }
+  .logo-text span{ display:block; font-family:'Sora',sans-serif; font-weight:400; font-size:0.56rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--sage); margin-top:1px; }
+  .nav-links{ display:flex; align-items:center; gap:34px; font-size:0.86rem; letter-spacing:0.01em; }
+  .nav-links a{ opacity:0.78; transition:opacity .2s; position:relative; }
+  .nav-links a:hover{ opacity:1; }
+  .cta-btn{
+    background:var(--crimson); color:var(--paper); padding:11px 22px;
+    border-radius:2px; font-size:0.82rem; letter-spacing:0.03em; font-weight:500;
+    transition:background .2s;
+  }
+  .cta-btn:hover{ background:#8a2222; }
+  .nav-mobile-hide{ display:flex; }
+  @media(max-width:900px){ .nav-mobile-hide{ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:96px 0 70px;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:40px; align-items:center;
+  }
+  @media(max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
+  .eyebrow{
+    font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--crimson);
+    font-weight:500; margin-bottom:22px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:26px; height:1px; background:var(--crimson); display:inline-block; }
+  .hero h1{
+    font-size:clamp(2.6rem, 5vw, 4.1rem); font-weight:600; line-height:1.04; letter-spacing:-0.01em;
+    color:var(--espresso);
+  }
+  .hero h1 em{ font-style:italic; font-weight:450; color:var(--crimson); }
+  .hero p.lede{
+    margin-top:26px; font-size:1.08rem; max-width:480px; color:#4a3a2c; font-weight:300;
+  }
+  .hero-ctas{ display:flex; gap:16px; margin-top:38px; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--espresso); color:var(--paper); padding:15px 28px; font-size:0.88rem;
+    font-weight:500; letter-spacing:0.02em; border-radius:2px; transition:background .2s;
+  }
+  .btn-primary:hover{ background:var(--crimson); }
+  .btn-ghost{
+    border:1px solid var(--line); padding:15px 28px; font-size:0.88rem; font-weight:500;
+    letter-spacing:0.02em; border-radius:2px; transition:border-color .2s, background .2s;
+  }
+  .btn-ghost:hover{ border-color:var(--espresso); background:rgba(42,28,19,0.03); }
+
+  .hero-visual{ position:relative; display:flex; justify-content:center; align-items:center; }
+  .vortex-svg{ width:min(420px, 90%); animation:spin-slow 40s linear infinite; }
+  @keyframes spin-slow{ to{ transform:rotate(360deg); } }
+  .hero-ring{
+    position:absolute; inset:0; border-radius:50%; border:1px dashed var(--line);
+    animation:spin-rev 60s linear infinite;
+  }
+  @keyframes spin-rev{ to{ transform:rotate(-360deg); } }
+  @media(prefers-reduced-motion:reduce){ .vortex-svg, .hero-ring{ animation:none; } }
+
+  /* ---------- SPECTRUM STRIP ---------- */
+  .spectrum{
+    display:flex; height:6px; width:100%;
+  }
+  .spectrum span{ flex:1; }
+
+  .chipbar{
+    background:var(--cream); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:18px 0;
+  }
+  .chipbar .wrap{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; font-size:0.82rem; }
+  .chip{
+    padding:7px 16px; border:1px solid var(--line); border-radius:20px; background:var(--paper);
+    letter-spacing:0.02em; color:var(--espresso-soft);
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ padding:100px 0; }
+  .section-head{ max-width:640px; margin-bottom:56px; }
+  .section-head .eyebrow{ margin-bottom:16px; }
+  .section-head h2{ font-size:clamp(1.9rem,3vw,2.6rem); font-weight:600; color:var(--espresso); line-height:1.15; }
+  .section-head p{ margin-top:16px; color:#5a4a3c; font-size:1.02rem; font-weight:300; max-width:540px; }
+
+  /* ---------- PROCESS / VORTEX PHILOSOPHY ---------- */
+  .process{ background:var(--paper); }
+  .process-rail{
+    position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:20px;
+  }
+  @media(max-width:800px){ .process-rail{ grid-template-columns:1fr; gap:36px; } }
+  .process-rail::before{
+    content:''; position:absolute; top:23px; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,var(--gold),var(--crimson),var(--sage));
+    opacity:0.5;
+  }
+  @media(max-width:800px){ .process-rail::before{ display:none; } }
+  .process-step{ padding-right:24px; position:relative; }
+  .step-dot{
+    width:11px; height:11px; border-radius:50%; background:var(--espresso); margin-bottom:22px; position:relative; z-index:2;
+  }
+  .process-step:nth-child(1) .step-dot{ background:var(--gold); }
+  .process-step:nth-child(2) .step-dot{ background:var(--gold-deep); }
+  .process-step:nth-child(3) .step-dot{ background:var(--crimson); }
+  .process-step:nth-child(4) .step-dot{ background:var(--sage); }
+  .process-step h3{ font-size:1.08rem; font-weight:600; margin-bottom:10px; color:var(--espresso); }
+  .process-step p{ font-size:0.9rem; color:#5a4a3c; font-weight:300; }
+
+  /* ---------- PRODUCTS ---------- */
+  .products{ background:var(--cream); }
+  .product-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:22px;
+  }
+  @media(max-width:1000px){ .product-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:560px){ .product-grid{ grid-template-columns:1fr; } }
+  .product-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:3px; overflow:hidden;
+    transition:transform .25s, box-shadow .25s; display:flex; flex-direction:column;
+  }
+  .product-card:hover{ transform:translateY(-5px); box-shadow:0 18px 40px -20px rgba(42,28,19,0.35); }
+  .product-swatch{ height:120px; position:relative; overflow:hidden; }
+  .product-swatch svg{ width:100%; height:100%; }
+  .product-body{ padding:22px 20px 24px; flex:1; display:flex; flex-direction:column; }
+  .product-cat{ font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--crimson); font-weight:500; margin-bottom:8px; }
+  .product-body h3{ font-family:'Fraunces',serif; font-size:1.18rem; font-weight:600; color:var(--espresso); margin-bottom:8px; }
+  .product-body p{ font-size:0.86rem; color:#5a4a3c; font-weight:300; flex:1; }
+  .product-meta{ margin-top:16px; display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; }
+  .product-meta .cas{ color:#8a7a6a; }
+  .product-meta a{ color:var(--espresso); font-weight:500; border-bottom:1px solid var(--espresso); }
+
+  /* ---------- APPLICATIONS ---------- */
+  .apps{ background:var(--paper); }
+  .app-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:10px; }
+  @media(max-width:800px){ .app-grid{ grid-template-columns:repeat(2,1fr); } }
+  .app-cell{ background:var(--paper); padding:34px 26px; transition:background .2s; }
+  .app-cell:hover{ background:var(--cream); }
+  .app-cell .n{ font-family:'Fraunces',serif; font-style:italic; color:var(--gold-deep); font-size:0.95rem; margin-bottom:14px; }
+  .app-cell h3{ font-size:1.02rem; font-weight:600; margin-bottom:10px; color:var(--espresso); }
+  .app-cell p{ font-size:0.84rem; color:#5a4a3c; font-weight:300; }
+
+  /* ---------- QUALITY BAND ---------- */
+  .quality{
+    background:var(--espresso); color:var(--paper);
+  }
+  .quality .section-head h2, .quality .section-head p{ color:var(--paper); }
+  .quality .section-head p{ color:#d8c9b8; }
+  .quality-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:40px; margin-top:10px; }
+  @media(max-width:800px){ .quality-grid{ grid-template-columns:1fr; } }
+  .quality-item{ border-top:1px solid rgba(251,247,239,0.18); padding-top:22px; }
+  .quality-item .num{ font-family:'Fraunces',serif; font-size:2.2rem; font-weight:300; color:var(--gold); }
+  .quality-item h3{ font-size:1rem; font-weight:600; margin-top:10px; margin-bottom:8px; }
+  .quality-item p{ font-size:0.86rem; color:#c9b8a6; font-weight:300; }
+
+  /* ---------- CTA BAND ---------- */
+  .cta-band{
+    background:var(--cream); text-align:center; padding:110px 0;
+  }
+  .cta-band h2{ font-size:clamp(2rem,4vw,2.9rem); color:var(--espresso); font-weight:600; max-width:680px; margin:0 auto 20px; line-height:1.15; }
+  .cta-band p{ color:#5a4a3c; font-weight:300; max-width:480px; margin:0 auto 36px; }
+  .cta-band .hero-ctas{ justify-content:center; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--espresso); color:#c9b8a6; padding:70px 0 30px; font-size:0.86rem; }
+  .foot-grid{ display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(251,247,239,0.12); }
+  @media(max-width:800px){ .foot-grid{ grid-template-columns:1fr 1fr; } }
+  .foot-grid h4{ color:var(--paper); font-size:0.76rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:500; margin-bottom:18px; }
+  .foot-grid ul{ list-style:none; }
+  .foot-grid li{ margin-bottom:10px; }
+  .foot-grid a:hover{ color:var(--paper); }
+  .foot-bottom{ padding-top:26px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:0.78rem; color:#8a7a6a; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a href="#" class="logo">
+      <svg class="logo-mark" viewBox="0 0 100 100" fill="none">
+        <path d="M50 10 C70 10 80 28 74 44 C69 57 55 60 50 50 C46 42 53 36 60 40 C66 43 65 52 58 55 C48 60 34 52 34 38 C34 20 50 10 50 10Z" fill="url(#navGrad)"/>
+        <defs><linearGradient id="navGrad" x1="30" y1="10" x2="75" y2="60" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#D8A657"/><stop offset="0.5" stop-color="#A52A2A"/><stop offset="1" stop-color="#7D956D"/>
+        </linearGradient></defs>
+      </svg>
+      <span class="logo-text">ABSOLUTES<span>Dynamic Flavor Extracts</span></span>
+    </a>
+    <div class="nav-links nav-mobile-hide">
+      <a href="#products">Products</a>
+      <a href="#process">Process</a>
+      <a href="#applications">Applications</a>
+      <a href="#quality">Quality</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="cta-btn">Request Sample</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Spice Oils · Oleoresins · Absolutes</div>
+      <h1>The <em>absolute</em> essence<br>of flavor, extracted.</h1>
+      <p class="lede">We distill and concentrate the world's spices into pure, dynamic oils and oleoresins — built for flavorists, food manufacturers, and fragrance houses who need consistency at the molecular level.</p>
+      <div class="hero-ctas">
+        <a href="#products" class="btn-primary">Browse the Range</a>
+        <a href="#contact" class="btn-ghost">Request a COA</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-ring" style="position:relative; width:min(420px,90%); aspect-ratio:1;">
+        <svg class="vortex-svg" style="position:absolute; inset:0; width:100%; height:100%;" viewBox="0 0 200 200" fill="none">
+          <defs>
+            <linearGradient id="heroGrad" x1="40" y1="20" x2="160" y2="180" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#D8A657"/><stop offset="0.5" stop-color="#A52A2A"/><stop offset="1" stop-color="#7D956D"/>
+            </linearGradient>
+          </defs>
+          <path d="M100 20 C145 20 168 58 155 92 C145 118 113 124 100 104 C90 89 105 74 122 82 C136 89 133 110 116 116 C90 126 62 106 62 76 C62 40 100 20 100 20Z"
+                fill="none" stroke="url(#heroGrad)" stroke-width="3"/>
+          <path d="M100 40 C130 40 145 64 136 86 C129 103 107 107 100 93 C95 83 105 74 116 79"
+                fill="none" stroke="url(#heroGrad)" stroke-width="1.4" opacity="0.55"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="spectrum">
+  <span style="background:var(--gold)"></span>
+  <span style="background:var(--crimson)"></span>
+  <span style="background:var(--sage)"></span>
+</div>
+
+<div class="chipbar">
+  <div class="wrap">
+    <span class="chip">Chili &amp; Paprika Oleoresins</span>
+    <span class="chip">Vanillin Absolute</span>
+    <span class="chip">Cinnamon Bark Oil</span>
+    <span class="chip">Black Pepper Oleoresin</span>
+    <span class="chip">Custom Flavor Blends</span>
+  </div>
+</div>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Our Philosophy</div>
+      <h2>Dynamic extraction, into one pure drop.</h2>
+      <p>Every batch moves through the same spiral: raw spice, solvent or steam, concentration, and finally — the absolute. It's a controlled process built for repeatable, testable purity.</p>
+    </div>
+    <div class="process-rail">
+      <div class="process-step">
+        <div class="step-dot"></div>
+        <h3>01 — Sourced</h3>
+        <p>Whole spice lots selected and verified at origin, from growers we track by region and harvest.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-dot"></div>
+        <h3>02 — Extracted</h3>
+        <p>Steam distillation for volatile oils; solvent extraction for full-spectrum oleoresins.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-dot"></div>
+        <h3>03 — Concentrated</h3>
+        <p>Solvent recovery and vacuum concentration bring each lot to standardized potency.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-dot"></div>
+        <h3>04 — Verified</h3>
+        <p>GC-MS profiling and COA issued before a single drop ships to your facility.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The Range</div>
+      <h2>Four extraction formats, one standard of purity.</h2>
+      <p>Every product ships with a certificate of analysis, solubility data, and recommended dosage for your application.</p>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="product-swatch" style="background:linear-gradient(135deg,#A52A2A,#7a1f1f);"></div>
+        <div class="product-body">
+          <div class="product-cat">Oleoresin</div>
+          <h3>Paprika Oleoresin</h3>
+          <p>Deep red colorant and flavor base, standardized ASTA units, for sauces and processed meats.</p>
+          <div class="product-meta"><span class="cas">CAS 68917-14-6</span><a href="#">View COA</a></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-swatch" style="background:linear-gradient(135deg,#2A1C13,#4a3222);"></div>
+        <div class="product-body">
+          <div class="product-cat">Absolute</div>
+          <h3>Vanillin Absolute</h3>
+          <p>High-purity concentrate with rounded, warm sweetness — the signature note for bakery and beverage.</p>
+          <div class="product-meta"><span class="cas">CAS 121-33-5</span><a href="#">View COA</a></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-swatch" style="background:linear-gradient(135deg,#D8A657,#b8843a);"></div>
+        <div class="product-body">
+          <div class="product-cat">Spice Oil</div>
+          <h3>Cinnamon Bark Oil</h3>
+          <p>Steam-distilled, high-cinnamaldehyde profile for confectionery, oral care, and beverage.</p>
+          <div class="product-meta"><span class="cas">CAS 8015-91-6</span><a href="#">View COA</a></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-swatch" style="background:linear-gradient(135deg,#7D956D,#5c7050);"></div>
+        <div class="product-body">
+          <div class="product-cat">Oleoresin</div>
+          <h3>Black Pepper Oleoresin</h3>
+          <p>Piperine-standardized extract delivering clean pungency without volatile loss on shelf.</p>
+          <div class="product-meta"><span class="cas">CAS 8006-82-4</span><a href="#">View COA</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="apps" id="applications">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Applications</div>
+      <h2>Built for how your industry actually uses extracts.</h2>
+    </div>
+    <div class="app-grid">
+      <div class="app-cell">
+        <div class="n">01</div>
+        <h3>Food &amp; Beverage</h3>
+        <p>Sauces, snacks, bakery, and beverage flavor systems requiring batch-to-batch consistency.</p>
+      </div>
+      <div class="app-cell">
+        <div class="n">02</div>
+        <h3>Flavor &amp; Fragrance</h3>
+        <p>Base notes and modifiers for compounders building proprietary accords.</p>
+      </div>
+      <div class="app-cell">
+        <div class="n">03</div>
+        <h3>Nutraceutical</h3>
+        <p>Standardized actives for functional foods, supplements, and encapsulation.</p>
+      </div>
+      <div class="app-cell">
+        <div class="n">04</div>
+        <h3>Personal Care</h3>
+        <p>Natural aromatic bases for soap, cosmetic, and home fragrance formulation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quality" id="quality">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Quality &amp; Sourcing</div>
+      <h2>Traceable from field to formulation.</h2>
+      <p>Every lot is documented from origin through final concentration, so your QA team never has to guess.</p>
+    </div>
+    <div class="quality-grid">
+      <div class="quality-item">
+        <div class="num">100%</div>
+        <h3>Lot Traceability</h3>
+        <p>Every drum is linked to origin, harvest date, and extraction batch record.</p>
+      </div>
+      <div class="quality-item">
+        <div class="num">GC-MS</div>
+        <h3>In-House Testing</h3>
+        <p>Full aromatic profiling before release, with COA issued per shipment.</p>
+      </div>
+      <div class="quality-item">
+        <div class="num">ISO</div>
+        <h3>Certified Facility</h3>
+        <p>ISO 22000 and Kosher/Halal-certified production for global compliance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band" id="contact">
+  <div class="wrap">
+    <h2>Ready to test a sample in your formulation?</h2>
+    <p>Request a sample kit or full documentation package — most quotes are returned within one business day.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary">Request a Sample</a>
+      <a href="#" class="btn-ghost">Request a Quote</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4 style="color:var(--gold);">Absolutes</h4>
+        <p style="max-width:260px; font-weight:300;">Dynamic flavor extracts — spice oils, oleoresins, and absolutes for manufacturers who need purity they can prove.</p>
+      </div>
+      <div>
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#">Spice Oils</a></li>
+          <li><a href="#">Oleoresins</a></li>
+          <li><a href="#">Absolutes</a></li>
+          <li><a href="#">Custom Blends</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Quality &amp; Sourcing</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get in Touch</h4>
+        <ul>
+          <li>sales@absolutesextracts.com</li>
+          <li>+1 442 491 3699</li>
+          <li>Request a Sample →</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Absolutes Dynamic Flavor Extracts. All rights reserved.</span>
+      <span>Privacy Policy · Terms · SDS Library</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
