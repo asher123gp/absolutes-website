@@ -89,7 +89,7 @@ export function Hero() {
           className="object-cover opacity-60"
           priority
           sizes="100vw"
-          quality={95}
+          quality={100}
         />
         {/* Dark Cinematic Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/90 mix-blend-multiply" />
@@ -104,18 +104,18 @@ export function Hero() {
         
         <div className="mt-auto w-full flex flex-col">
           {/* Top Eyebrow / Technical Label */}
-          <div className="overflow-hidden mb-12">
-            <div className="hero-stagger flex items-center gap-6">
-              <span className="w-16 h-px bg-brass/60" />
-              <span className="font-sans text-[0.65rem] tracking-[0.3em] uppercase text-brass font-medium">
+          <div className="overflow-hidden mb-8 lg:mb-12">
+            <div className="hero-stagger flex items-center gap-4 lg:gap-6">
+              <span className="w-8 lg:w-16 h-px bg-brass/60" />
+              <span className="font-sans text-[0.5rem] lg:text-[0.65rem] tracking-[0.15em] lg:tracking-[0.3em] uppercase text-brass font-medium">
                 SPICE OILS &middot; OLEORESINS &middot; ABSOLUTES
               </span>
             </div>
           </div>
 
           {/* Massive Editorial Headline */}
-          <h1 ref={titleRef} className="font-serif text-[clamp(4rem,9vw,9rem)] leading-[0.9] tracking-[-0.03em] text-ivory max-w-[1200px]">
-            <div className="overflow-hidden pb-2"><div className="hero-stagger">The <em className="italic text-brass font-light pr-2">absolute</em></div></div>
+          <h1 ref={titleRef} className="font-serif text-[3.2rem] min-[375px]:text-[3.5rem] md:text-[5rem] lg:text-[clamp(5rem,9vw,9rem)] leading-[1] lg:leading-[0.9] tracking-[-0.02em] lg:tracking-[-0.03em] text-ivory max-w-[1200px]">
+            <div className="overflow-hidden pb-1 lg:pb-2"><div className="hero-stagger">The <em className="italic text-brass font-light pr-2">absolute</em></div></div>
             <div className="overflow-hidden pb-2"><div className="hero-stagger">essence of</div></div>
             <div className="overflow-hidden pb-2"><div className="hero-stagger">flavor,</div></div>
             <div className="overflow-hidden pb-2"><div className="hero-stagger">extracted.</div></div>

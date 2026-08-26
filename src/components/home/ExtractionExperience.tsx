@@ -57,7 +57,7 @@ export function ExtractionExperience() {
           start: "top top",
           end: `+=${100 * totalSteps}%`, // 400% scroll duration
           pin: true,
-          scrub: 1,
+          scrub: true,
         }
       });
 
@@ -91,8 +91,8 @@ export function ExtractionExperience() {
           stepStartTime
         );
         tl.fromTo(nextImg,
-          { opacity: 0, scale: 0.9, filter: "blur(20px)" },
-          { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5 },
+          { opacity: 0, scale: 0.9 },
+          { opacity: 1, scale: 1, duration: 0.5 },
           stepStartTime
         );
       });

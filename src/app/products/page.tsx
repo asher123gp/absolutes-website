@@ -175,10 +175,10 @@ function CatalogueContent() {
           </h1>
 
           {/* Editorial Category Filters */}
-          <div className="flex flex-wrap gap-8 lg:gap-16 border-b border-charcoal/10 pb-8 mb-16">
+          <div className="flex flex-nowrap items-center justify-between sm:justify-start gap-1 sm:gap-6 lg:gap-16 border-b border-charcoal/10 pb-6 lg:pb-8 mb-10 lg:mb-16 w-full overflow-visible">
             <button
               onClick={() => setActiveCategory("all")}
-              className={`relative font-sans text-[0.7rem] tracking-[0.15em] uppercase pb-2 transition-colors duration-500 ${
+              className={`relative font-sans text-[0.45rem] min-[375px]:text-[0.5rem] sm:text-[0.6rem] lg:text-[0.7rem] tracking-[0.02em] min-[375px]:tracking-[0.05em] sm:tracking-[0.1em] lg:tracking-[0.15em] uppercase pb-2 transition-colors duration-500 whitespace-nowrap ${
                 activeCategory === "all" ? "text-charcoal font-medium" : "text-charcoal/40 hover:text-charcoal"
               }`}
             >
@@ -189,7 +189,7 @@ function CatalogueContent() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`relative font-sans text-[0.7rem] tracking-[0.15em] uppercase pb-2 transition-colors duration-500 ${
+                className={`relative font-sans text-[0.45rem] min-[375px]:text-[0.5rem] sm:text-[0.6rem] lg:text-[0.7rem] tracking-[0.02em] min-[375px]:tracking-[0.05em] sm:tracking-[0.1em] lg:tracking-[0.15em] uppercase pb-2 transition-colors duration-500 whitespace-nowrap ${
                   activeCategory === cat ? "text-charcoal font-medium" : "text-charcoal/40 hover:text-charcoal"
                 }`}
               >

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { createPortal } from "react-dom";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -17,9 +18,11 @@ const navLinks = [
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
+    setMounted(true);
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
@@ -50,16 +53,20 @@ export function Navigation() {
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    
-    if (mobileOpen) {
-      gsap.to(".mobile-menu-overlay", { opacity: 1, duration: 0.6, ease: "power3.out", display: "flex" });
-      gsap.fromTo(".mobile-link", 
-        { y: 40, opacity: 0 }, 
-        { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: "power4.out", delay: 0.2 }
-      );
-    } else {
-      gsap.to(".mobile-menu-overlay", { opacity: 0, duration: 0.5, ease: "power3.in", onComplete: () => {
-        gsap.set(".mobile-menu-overlay", { display: "none" });
+    const overlay = document.querySelector(".mobile-menu-overlay");
+    const links = document.querySelectorAll(".mobile-link");
+
+    if (mobileOpen && overlay) {
+      gsap.to(overlay, { opacity: 1, duration: 0.6, ease: "power3.out", display: "flex" });
+      if (links.length > 0) {
+        gsap.fromTo(links, 
+          { y: 40, opacity: 0 }, 
+          { y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: "power4.out", delay: 0.2 }
+        );
+      }
+    } else if (mounted && overlay) {
+      gsap.to(overlay, { opacity: 0, duration: 0.5, ease: "power3.in", onComplete: () => {
+        gsap.set(overlay, { display: "none" });
       }});
     }
     
@@ -88,8 +95,8 @@ export function Navigation() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
           scrolled
-            ? "bg-charcoal/70 backdrop-blur-md border-b border-ivory/[0.04] py-3"
-            : "bg-transparent py-6"
+            ? "bg-charcoal/70 backdrop-blur-md border-b border-ivory/[0.04] py-3 lg:py-3"
+            : "bg-transparent py-4 lg:py-6"
         }`}
       >
         <nav
@@ -146,36 +153,42 @@ export function Navigation() {
         </nav>
       </header>
 
-      {/* Mobile Menu — Fullscreen Overlay */}
-      <div className="mobile-menu-overlay fixed inset-0 z-40 bg-charcoal hidden flex-col justify-center items-center grain opacity-0">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-botanical/20 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brass/10 rounded-full blur-[120px]" />
-        </div>
+      {/* Mobile Menu — Fullscreen Overlay via Portal */}
+      {mounted && createPortal(
+        <div className="mobile-menu-overlay fixed top-0 left-0 w-full h-[100dvh] z-[100] bg-charcoal hidden flex-col justify-center items-center opacity-0">
+          
+          {/* Texture & Glow Backgrounds */}
+          <div className="absolute inset-0 grain pointer-events-none" />
+          <div className="absolute inset-0 opacity-30 pointer-events-none">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-botanical/20 rounded-full blur-[120px]" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brass/10 rounded-full blur-[120px]" />
+          </div>
 
-        <nav className="relative z-10 flex flex-col items-center gap-8 w-full px-6">
-          {navLinks.map((link) => (
-            <div key={link.label} className="overflow-hidden">
+          <nav className="relative z-10 flex flex-col items-center gap-6 w-full px-6">
+            {navLinks.map((link) => (
+              <div key={link.label} className="overflow-hidden">
+                <Link
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="mobile-link block font-sans text-[1.1rem] tracking-[0.2em] uppercase text-ivory/70 hover:text-ivory transition-colors duration-300"
+                >
+                  {link.label}
+                </Link>
+              </div>
+            ))}
+            <div className="overflow-hidden mt-6">
               <Link
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className="mobile-link block font-serif text-[2.5rem] font-medium text-ivory/80 hover:text-ivory transition-colors duration-300 italic"
+                href="/request-sample"
+                onClick={() => setMobileOpen(false)}
+                className="mobile-link block border border-ivory/30 text-ivory px-8 py-3 text-[0.7rem] font-medium tracking-[0.15em] uppercase hover:bg-ivory hover:text-charcoal transition-all duration-500"
               >
-                {link.label}
+                Request Sample
               </Link>
             </div>
-          ))}
-          <div className="overflow-hidden mt-8">
-            <Link
-              href="/request-sample"
-              onClick={() => setMobileOpen(false)}
-              className="mobile-link block border border-ivory/30 text-ivory px-10 py-4 text-[0.7rem] font-medium tracking-[0.15em] uppercase hover:bg-ivory hover:text-charcoal transition-all duration-500"
-            >
-              Request Sample
-            </Link>
-          </div>
-        </nav>
-      </div>
+          </nav>
+        </div>,
+        document.body
+      )}
     </>
   );
 }

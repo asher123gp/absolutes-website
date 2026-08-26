@@ -126,20 +126,20 @@ export function Applications() {
         </div>
 
         {/* Right: Active Content (7 cols offset) */}
-        <div className="lg:col-span-7 lg:col-start-6 flex items-center h-[300px] lg:h-[500px]">
+        <div className="relative lg:col-span-7 lg:col-start-6 flex items-center h-[280px] sm:h-[300px] lg:h-[500px] mt-4 lg:mt-0 w-full">
           {applications.map((app) => (
             <div 
               key={`content-${app.id}`} 
-              className={`absolute top-1/2 -translate-y-1/2 max-w-[600px] transition-all duration-700 ${
+              className={`absolute top-1/2 -translate-y-1/2 left-0 w-full max-w-[600px] transition-all duration-700 ${
                 activeId === app.id 
                   ? "opacity-100 translate-y-0 pointer-events-auto" 
                   : "opacity-0 translate-y-8 pointer-events-none"
               }`}
             >
-              <h4 className="font-serif text-[clamp(2.5rem,4vw,4rem)] leading-[1.05] tracking-[-0.02em] font-medium mb-8 text-ivory">
+              <h4 className="font-serif text-[clamp(2.2rem,4vw,4rem)] leading-[1.05] tracking-[-0.02em] font-medium mb-6 lg:mb-8 text-ivory">
                 <em className="italic font-light">{app.title}.</em>
               </h4>
-              <p className="font-sans text-[1.1rem] lg:text-[1.3rem] leading-[1.7] text-ivory/70 font-light border-l border-ivory/10 pl-8">
+              <p className="font-sans text-[1rem] sm:text-[1.1rem] lg:text-[1.3rem] leading-[1.7] text-ivory/70 font-light border-l border-ivory/10 pl-6 lg:pl-8">
                 {app.description}
               </p>
             </div>

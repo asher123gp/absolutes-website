@@ -17,24 +17,26 @@ export function Quality() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      // Animate lines and grid
-      gsap.fromTo(".tech-line-h", 
-        { scaleX: 0 }, 
-        { scaleX: 1, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: containerRef.current, start: "top 70%" } }
-      );
-      gsap.fromTo(".tech-line-v", 
-        { scaleY: 0 }, 
-        { scaleY: 1, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: containerRef.current, start: "top 70%" } }
-      );
+      // Safely query elements to avoid target not found warnings
+      const hLines = document.querySelectorAll(".tech-line-h");
+      const metricsBlocks = document.querySelectorAll(".metric-block");
 
-      // Reveal metrics
-      gsap.fromTo(".metric-block",
-        { opacity: 0, y: 30 },
-        { 
-          opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power3.out",
-          scrollTrigger: { trigger: containerRef.current, start: "top 60%" }
-        }
-      );
+      if (hLines.length > 0) {
+        gsap.fromTo(hLines, 
+          { scaleX: 0 }, 
+          { scaleX: 1, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: containerRef.current, start: "top 70%" } }
+        );
+      }
+
+      if (metricsBlocks.length > 0) {
+        gsap.fromTo(metricsBlocks,
+          { opacity: 0, y: 30 },
+          { 
+            opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power3.out",
+            scrollTrigger: { trigger: containerRef.current, start: "top 60%" }
+          }
+        );
+      }
     }, containerRef);
 
     return () => ctx.revert();
