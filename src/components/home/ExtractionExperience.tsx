@@ -43,6 +43,8 @@ export function ExtractionExperience() {
     if (!sectionRef.current || !visualsRef.current) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    const isMobile = window.innerWidth < 768;
+
     const ctx = gsap.context(() => {
       const texts = gsap.utils.toArray(".extract-text") as HTMLElement[];
       const images = gsap.utils.toArray(".extract-img") as HTMLElement[];
@@ -55,7 +57,7 @@ export function ExtractionExperience() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: `+=${100 * totalSteps}%`, // 400% scroll duration
+          end: isMobile ? "+=240%" : `+=${100 * totalSteps}%`,
           pin: true,
           scrub: true,
         }
@@ -65,7 +67,7 @@ export function ExtractionExperience() {
       tl.to(progressLine, {
         scaleY: 1,
         ease: "none",
-        duration: totalSteps
+        duration: isMobile ? 3.5 : totalSteps
       }, 0);
 
       // Sequence the steps
@@ -129,6 +131,18 @@ export function ExtractionExperience() {
         {/* Atmospheric Glow */}
         <div className="absolute inset-0 pointer-events-none z-20">
           <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] bg-charcoal/90 rounded-full blur-[100px]" />
+        </div>
+
+        {/* Static Section Label */}
+        <div className="absolute top-8 sm:top-10 lg:top-14 left-0 right-0 z-30 pointer-events-none">
+          <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-px bg-brass/60" />
+              <span className="font-sans text-[0.6rem] lg:text-[0.65rem] tracking-[0.25em] uppercase text-brass font-medium">
+                The Extraction Process
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Content Layer */}

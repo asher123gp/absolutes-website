@@ -1,13 +1,19 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { gsap } from "gsap";
 
 function RequestQuoteForm() {
+  const searchParams = useSearchParams();
+  const successParam = searchParams.get("success") === "true";
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const showSuccess = isSuccess || successParam;
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -27,6 +33,12 @@ function RequestQuoteForm() {
   });
 
   useEffect(() => {
+    if (showSuccess && typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [showSuccess]);
+
+  useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(".form-stagger", 
         { opacity: 0, y: 30 }, 
@@ -34,7 +46,7 @@ function RequestQuoteForm() {
       );
     });
     return () => ctx.revert();
-  }, []);
+  }, [showSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -56,6 +68,10 @@ function RequestQuoteForm() {
 
       if (res.ok) {
         setIsSuccess(true);
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "instant" });
+          window.history.replaceState(null, "", "/request-quote?success=true");
+        }
       } else {
         setErrorMsg(data.error || "We couldn't submit your request right now. Please try again or contact us directly.");
       }
@@ -66,7 +82,7 @@ function RequestQuoteForm() {
     }
   };
 
-  if (isSuccess) {
+  if (showSuccess) {
     return (
       <div className="max-w-[600px] w-full text-center form-stagger mx-auto">
         <div className="w-16 h-px bg-brass mx-auto mb-8" />

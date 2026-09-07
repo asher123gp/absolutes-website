@@ -26,9 +26,9 @@ export function Footer() {
             <div>
               <span className="block font-sans text-[0.65rem] tracking-[0.15em] uppercase text-brass mb-6">Products</span>
               <ul className="flex flex-col gap-4 font-sans text-[0.85rem] text-ivory/50 font-light">
-                <li><Link href="/products" className="hover:text-ivory transition-colors">Spice Oils</Link></li>
-                <li><Link href="/products" className="hover:text-ivory transition-colors">Oleoresins</Link></li>
-                <li><Link href="/products" className="hover:text-ivory transition-colors">Absolutes</Link></li>
+                <li><Link href="/products?category=Spice+Oil" className="hover:text-ivory transition-colors">Spice Oils</Link></li>
+                <li><Link href="/products?category=Oleoresin" className="hover:text-ivory transition-colors">Oleoresins</Link></li>
+                <li><Link href="/products?category=Absolute" className="hover:text-ivory transition-colors">Absolutes</Link></li>
                 <li><Link href="/products" className="hover:text-ivory transition-colors">Custom Blends</Link></li>
               </ul>
             </div>
@@ -36,7 +36,6 @@ export function Footer() {
             <div>
               <span className="block font-sans text-[0.65rem] tracking-[0.15em] uppercase text-brass mb-6">Company</span>
               <ul className="flex flex-col gap-4 font-sans text-[0.85rem] text-ivory/50 font-light">
-                <li><Link href="/#process" className="hover:text-ivory transition-colors">Methodology</Link></li>
                 <li><Link href="/#quality" className="hover:text-ivory transition-colors">Quality & Sourcing</Link></li>
                 <li><Link href="/#contact" className="hover:text-ivory transition-colors">Request Sample</Link></li>
               </ul>

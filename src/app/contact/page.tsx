@@ -8,10 +8,13 @@ import { gsap } from "gsap";
 function ContactForm() {
   const searchParams = useSearchParams();
   const initialType = searchParams.get("type") || "";
+  const successParam = searchParams.get("success") === "true";
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const showSuccess = isSuccess || successParam;
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -25,6 +28,12 @@ function ContactForm() {
   });
 
   useEffect(() => {
+    if (showSuccess && typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [showSuccess]);
+
+  useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(".form-stagger", 
         { opacity: 0, y: 30 }, 
@@ -32,7 +41,7 @@ function ContactForm() {
       );
     });
     return () => ctx.revert();
-  }, []);
+  }, [showSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,6 +63,10 @@ function ContactForm() {
 
       if (res.ok) {
         setIsSuccess(true);
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "instant" });
+          window.history.replaceState(null, "", "/contact?success=true");
+        }
       } else {
         setErrorMsg(data.error || "We couldn't submit your enquiry right now. Please try again or contact us directly.");
       }
@@ -64,7 +77,7 @@ function ContactForm() {
     }
   };
 
-  if (isSuccess) {
+  if (showSuccess) {
     return (
       <div className="max-w-[600px] w-full text-center form-stagger mx-auto">
         <div className="w-16 h-px bg-brass mx-auto mb-8" />

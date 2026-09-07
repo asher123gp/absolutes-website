@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
@@ -20,6 +20,7 @@ export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const scrollToTopOnHomeRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +32,19 @@ export function Navigation() {
 
   useEffect(() => {
     setMobileOpen(false);
+    if (pathname === "/" && scrollToTopOnHomeRef.current) {
+      scrollToTopOnHomeRef.current = false;
+      window.scrollTo({ top: 0, behavior: "instant" });
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      });
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        if ("scrollRestoration" in window.history) {
+          window.history.scrollRestoration = "auto";
+        }
+      }, 100);
+    }
   }, [pathname]);
 
   // Handle cross-page hash navigation race condition with GSAP
@@ -90,11 +104,33 @@ export function Navigation() {
     }
   };
 
+  const handleMobileHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      document.body.style.overflow = "";
+      setMobileOpen(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      if (window.location.hash) {
+        window.history.pushState(null, "", "/");
+      }
+    } else {
+      scrollToTopOnHomeRef.current = true;
+      document.body.style.overflow = "";
+      setMobileOpen(false);
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+    }
+  };
+
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          scrolled
+          scrolled || pathname === "/products"
             ? "bg-charcoal/70 backdrop-blur-md border-b border-ivory/[0.04] py-3 lg:py-3"
             : "bg-transparent py-4 lg:py-6"
         }`}
@@ -155,37 +191,86 @@ export function Navigation() {
 
       {/* Mobile Menu — Fullscreen Overlay via Portal */}
       {mounted && createPortal(
-        <div className="mobile-menu-overlay fixed top-0 left-0 w-full h-[100dvh] z-[100] bg-charcoal hidden flex-col justify-center items-center opacity-0">
-          
-          {/* Texture & Glow Backgrounds */}
+        <div 
+          className="mobile-menu-overlay fixed inset-0 w-full h-[100dvh] z-[100] bg-charcoal hidden flex-col justify-between opacity-0 overflow-hidden"
+          aria-hidden={!mobileOpen}
+        >
+          {/* Texture & Subtle Glow Backgrounds */}
           <div className="absolute inset-0 grain pointer-events-none" />
-          <div className="absolute inset-0 opacity-30 pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-botanical/20 rounded-full blur-[120px]" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brass/10 rounded-full blur-[120px]" />
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-brass/10 rounded-full blur-[100px]" />
           </div>
 
-          <nav className="relative z-10 flex flex-col items-center gap-6 w-full px-6">
-            {navLinks.map((link) => (
-              <div key={link.label} className="overflow-hidden">
+          {/* Top Bar: Logo (left) + Close Button X (right) */}
+          <div className="relative z-10 w-full flex items-center justify-between px-6 py-4">
+            <Link 
+              href="/" 
+              onClick={() => setMobileOpen(false)}
+              className="group flex items-center gap-4"
+              aria-label="Home"
+            >
+              <div className="flex flex-col">
+                <span className="font-serif text-[1.2rem] font-medium tracking-[0.05em] text-ivory">
+                  ABSOLUTES
+                </span>
+                <span className="font-sans text-[0.45rem] tracking-[0.3em] uppercase text-ivory/50 font-normal -mt-0.5">
+                  Dynamic Flavor Extracts
+                </span>
+              </div>
+            </Link>
+
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-center w-10 h-10 text-ivory/80 hover:text-ivory transition-colors"
+              aria-label="Close menu"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Centered Navigation Items + CTA */}
+          <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 -mt-6">
+            <nav className="flex flex-col items-center gap-7 w-full text-center" aria-label="Mobile navigation">
+              {navLinks.map((link) => {
+                const isHome = link.href === "/";
+                return (
+                  <div key={link.label} className="overflow-hidden">
+                    <Link
+                      href={link.href}
+                      onClick={(e) => {
+                        if (isHome) {
+                          handleMobileHomeClick(e);
+                        } else {
+                          handleNavClick(e, link.href);
+                          setMobileOpen(false);
+                        }
+                      }}
+                      className="mobile-link block font-sans text-[1.15rem] sm:text-[1.25rem] tracking-[0.25em] uppercase text-ivory/80 hover:text-ivory transition-colors duration-300 font-light"
+                    >
+                      {link.label}
+                    </Link>
+                  </div>
+                );
+              })}
+
+              {/* REQUEST SAMPLE CTA */}
+              <div className="overflow-hidden mt-8 sm:mt-10">
                 <Link
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="mobile-link block font-sans text-[1.1rem] tracking-[0.2em] uppercase text-ivory/70 hover:text-ivory transition-colors duration-300"
+                  href="/request-sample"
+                  onClick={() => setMobileOpen(false)}
+                  className="mobile-link inline-block font-sans border border-ivory/30 text-ivory px-8 py-3.5 text-[0.7rem] font-medium tracking-[0.2em] uppercase hover:bg-ivory hover:text-charcoal transition-all duration-500"
                 >
-                  {link.label}
+                  Request Sample
                 </Link>
               </div>
-            ))}
-            <div className="overflow-hidden mt-6">
-              <Link
-                href="/request-sample"
-                onClick={() => setMobileOpen(false)}
-                className="mobile-link block border border-ivory/30 text-ivory px-8 py-3 text-[0.7rem] font-medium tracking-[0.15em] uppercase hover:bg-ivory hover:text-charcoal transition-all duration-500"
-              >
-                Request Sample
-              </Link>
-            </div>
-          </nav>
+            </nav>
+          </div>
+
+          {/* Bottom Spacer for optical vertical balance */}
+          <div className="h-10 w-full pointer-events-none" />
         </div>,
         document.body
       )}

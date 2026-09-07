@@ -8,10 +8,13 @@ import { gsap } from "gsap";
 function RequestSampleForm() {
   const searchParams = useSearchParams();
   const initialProduct = searchParams.get("product") || "";
+  const successParam = searchParams.get("success") === "true";
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const showSuccess = isSuccess || successParam;
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -29,6 +32,12 @@ function RequestSampleForm() {
   });
 
   useEffect(() => {
+    if (showSuccess && typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [showSuccess]);
+
+  useEffect(() => {
     // Basic entrance animation
     const ctx = gsap.context(() => {
       gsap.fromTo(".form-stagger", 
@@ -37,7 +46,7 @@ function RequestSampleForm() {
       );
     });
     return () => ctx.revert();
-  }, []);
+  }, [showSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -59,6 +68,10 @@ function RequestSampleForm() {
 
       if (res.ok) {
         setIsSuccess(true);
+        if (typeof window !== "undefined") {
+          window.scrollTo({ top: 0, behavior: "instant" });
+          window.history.replaceState(null, "", "/request-sample?success=true");
+        }
       } else {
         setErrorMsg(data.error || "We couldn't submit your request right now. Please try again or contact us directly.");
       }
@@ -69,7 +82,7 @@ function RequestSampleForm() {
     }
   };
 
-  if (isSuccess) {
+  if (showSuccess) {
     return (
       <div className="max-w-[600px] w-full text-center form-stagger mx-auto">
         <div className="w-16 h-px bg-brass mx-auto mb-8" />

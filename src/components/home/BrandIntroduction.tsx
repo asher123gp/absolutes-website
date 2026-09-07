@@ -60,11 +60,6 @@ export function BrandIntroduction() {
           <p className="brand-intro-text font-sans text-[1.1rem] leading-[1.8] text-charcoal/80 font-light mb-8">
             Every batch moves through the same spiral: raw spice, solvent or steam, concentration, and finally — the absolute. It&apos;s a controlled process built for repeatable, testable purity.
           </p>
-          <div className="brand-intro-text">
-            <span className="inline-block border-b border-charcoal/30 pb-1 font-sans text-[0.7rem] uppercase tracking-[0.1em] text-charcoal font-medium hover:border-charcoal transition-colors cursor-pointer">
-              Discover the methodology
-            </span>
-          </div>
         </div>
 
       </div>
